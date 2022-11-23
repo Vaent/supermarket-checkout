@@ -40,43 +40,43 @@ The CLI will be developed only after the API is completed.
 ### Messaging
 
 ```
-User ----> Controller.scan(item)
-  |                       |
-  |                   getTransaction()
-  |                       |
-  |                       +------> transaction.add(item)
-  |                       |                      |
-  |                       |<-- {running total} --+
-  |                       |
-  |<-- {running total} ---+
+User ----> transactionManager.scan(item)
+  |                            |
+  |                        getTransaction()
+  |                            |
+  |                            +------> transaction.add(item)
+  |                            |                      |
+  |                            |<-- {running total} --+
+  |                            |
+  |<----- {running total} -----+
 ```
 
 ```
-User ----> Controller.checkout()
-  |                       |
-  |                       +------> transaction.total()
-  |                       |                      |
-  |                       |<-- {running total} --+
-  |                       |
-  |<-- {running total} ---+
+User ----> transactionManager.checkout()
+  |                            |
+  |                            +------> transaction.total()
+  |                            |                      |
+  |                            |<-- {running total} --+
+  |                            |
+  |<----- {running total} -----+
 ```
 
 ```
-User ----> Controller.pay(paymentAmount)
-  |                       |
-  |                   closeTransaction() --> transaction.close()
-  |                       |
-  |<-- {confirm payment} -+
+User ----> transactionManager.pay(paymentAmount)
+  |                            |
+  |                        closeTransaction() --> transaction.close()
+  |                            |
+  |<---- {confirm payment} ----+
 ```
 Note: no validation of payment is performed since the brief does not include any payment processing requirement. Similarly, no process is defined to cancel a transaction without payment. The payment step is stubbed here to allow closing the transaction in a controlled manner, with the expectation that it would be expanded later.
 
 ```
-Controller ----> PricingSchemeService.getCurrentScheme()
-  |                                     |
-  |<---- {default pricing scheme } -----+
+TransactionManager ----> PricingSchemeService.getCurrentScheme()
+  |                                              |
+  |<--------- {default pricing scheme } ---------+
 ```
 
-### Controller
+### TransactionManager
 
 Additional details to be considered alongside the messaging diagrams above.
 
