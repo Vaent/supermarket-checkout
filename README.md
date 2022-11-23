@@ -105,7 +105,7 @@ B    | 30               | 2                 | 45
 C    | 20               | -                 | -
 D    | 15               | -                 | -
 
-#### getCurrentScheme() : Set\<ItemPrice\>
+#### public getCurrentScheme() : Set\<ItemPrice\>
 
 - returns the current pricing scheme
 
@@ -124,7 +124,7 @@ Note: record types are available in JDK 14 and higher versions.
 
 Transaction class excludes the default no-args constructor since the pricing scheme must be loaded up front.
 
-#### Transaction(Set\<ItemPrice\> pricingScheme)
+#### public Transaction(Set\<ItemPrice\> pricingScheme)
 
 - store pricingScheme
 - initialise and store an empty Map\<char, int\> which will record quantities of scanned items
@@ -157,6 +157,6 @@ Assumption: this method is used to update the running total whenever a single it
 
 Note: since the running total is recalculated after every change there should be no need to calculate the final total from scratch. This assumption will rely on thorough testing to ensure the running total is always correct.
 
-##### public close()
+#### public close()
 
 - update closed status = true, making this instance unavailable for further mutation
