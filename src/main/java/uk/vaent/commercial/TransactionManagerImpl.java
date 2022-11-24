@@ -9,6 +9,13 @@ public class TransactionManagerImpl implements TransactionManager {
         return getTransaction().total();
     }
 
+    protected void closeTransaction() {
+        if (currentTransaction != null) {
+            currentTransaction.close();
+            currentTransaction = null;
+        }
+    }
+
     protected Transaction getTransaction() {
         if (currentTransaction == null || currentTransaction.isClosed()) {
             currentTransaction = transactionFactory.getNew(pricingSchemeService.getCurrentScheme());
@@ -17,6 +24,7 @@ public class TransactionManagerImpl implements TransactionManager {
     }
 
     public boolean pay() {
+        closeTransaction();
         return true;
     }
 

@@ -84,4 +84,18 @@ class TransactionManagerImplTest {
         transactionManager.scan('A');
         assertEquals(42, transactionManager.checkout());
     }
+
+    @Test
+    void whenPayThenTransactionIsClosed() throws ItemNotDefinedException, TransactionClosedException {
+        MockTransaction transaction = new MockTransaction();
+        MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
+        TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        transactionManager.setTransactionFactory(transactionFactory);
+        transactionManager.scan('A');
+        assertEquals(0, transaction.getCloseInvocationCount());
+        assertTrue(transactionManager.pay(), "Pay method should return success response");
+        assertEquals(1, transaction.getCloseInvocationCount(), "Transaction should be closed after payment");
+        transactionManager.pay();
+        assertEquals(1, transaction.getCloseInvocationCount(), "Transaction should not be closed more than once");
+    }
 }
