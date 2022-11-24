@@ -2,6 +2,22 @@
 
 ## Usage
 
+JVM/JDK 16 (minimum) is required to run the app or consume the code.
+
+### Command line app
+
+The easiest way to directly interact with the app is by running the CheckoutApp.jar file in a terminal:
+
+`java -jar CheckoutApp.jar`
+
+All available operations are listed within the app, which runs as an open loop. To exit the app, enter `quit` (case-insensitive) when prompted for input.
+
+Note: in some terminals the `£` character may not display correctly. If you encounter this issue you may wish to try using a different terminal.
+
+### Library
+
+The core logic can be leveraged within an application as follows:
+
 - Instantiate `TransactionManagerImpl`.
   - The instance will have default `PricingSchemeService` and `TransactionFactory` dependencies, which can optionally be replaced using the relevant setter methods.
 - Use the `scan(char itemCode)` method to add an item to the transaction.
@@ -131,7 +147,7 @@ ItemMultiDeal is a record with the following fields:
 - multiDealQuantity : int
 - multiDealPriceInPence : int
 
-Note: record types are available in JDK 14 and higher versions.
+Note: record types are available in JDK 14 (preview) and higher versions.
 
 ### Transaction interface / TransactionImpl class
 
