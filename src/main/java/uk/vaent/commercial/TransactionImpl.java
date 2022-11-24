@@ -31,7 +31,7 @@ public class TransactionImpl implements Transaction {
         return runningTotal;
     }
 
-    public void updateRunningTotal(char scannedItem) throws ItemNotDefinedException {
+    public void updateRunningTotal(char scannedItem) {
         ItemPrice scannedItemPrice = pricingScheme.stream()
             .filter(itemPrice -> itemPrice.item() == scannedItem)
             .findAny().orElseThrow(ItemNotDefinedException::new);

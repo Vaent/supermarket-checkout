@@ -1,5 +1,18 @@
 # supermarket-checkout
 
+## Usage
+
+- Instantiate `TransactionManagerImpl`.
+  - The instance will have default `PricingSchemeService` and `TransactionFactory` dependencies, which can optionally be replaced using the relevant setter methods.
+- Use the `scan(char itemCode)` method to add an item to the transaction.
+  - If the item code is invalid, an `ItemNotDefinedException` will be thrown; the consumer should handle this runtime exception or validate the item code up front.
+  - The method returns an updated subtotal after each invocation.
+- Use the `checkout()` method to retrieve the transaction total without modifying any details of the transaction.
+  - Calling this method before any items have been scanned will open a new (empty) transaction.
+  - The transaction remains open for further items to be scanned after `checkout` is called.
+- Use the `pay()` method to close the transaction.
+  - Any use of `scan` or `checkout` after closing a transaction will start a new transaction.
+
 ## Requirements
 
 Implement code for a checkout system which can:
