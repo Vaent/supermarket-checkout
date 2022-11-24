@@ -10,7 +10,7 @@ public class TransactionManagerImpl implements TransactionManager {
     }
 
     protected Transaction getTransaction() {
-        if (currentTransaction == null) {
+        if (currentTransaction == null || currentTransaction.isClosed()) {
             currentTransaction = transactionFactory.getNew(pricingSchemeService.getCurrentScheme());
         }
         return currentTransaction;

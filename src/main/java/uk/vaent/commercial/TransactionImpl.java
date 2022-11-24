@@ -23,6 +23,10 @@ public class TransactionImpl implements Transaction {
         isClosed = true;
     }
 
+    public boolean isClosed() {
+        return isClosed;
+    }
+
     public int total() {
         return runningTotal;
     }
