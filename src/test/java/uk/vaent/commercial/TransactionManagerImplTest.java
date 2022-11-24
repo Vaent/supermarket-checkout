@@ -7,7 +7,7 @@ import uk.vaent.commercial.mock.*;
 
 class TransactionManagerImplTest {
     @Test
-    void scanFirstItemCreatesNewTransaction() throws ItemNotDefinedException, TransactionClosedException {
+    void scanFirstItemCreatesNewTransaction() {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -17,7 +17,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void scanSecondItemDoesNotCreateNewTransaction() throws ItemNotDefinedException, TransactionClosedException {
+    void scanSecondItemDoesNotCreateNewTransaction() {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -29,7 +29,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void whenScanItemAfterTransactionClosedThenNewTransactionCreated() throws ItemNotDefinedException, TransactionClosedException {
+    void whenScanItemAfterTransactionClosedThenNewTransactionCreated() {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -44,7 +44,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void pricingSchemeServiceIsCalledWhenTransactionCreatedOnly() throws ItemNotDefinedException, TransactionClosedException {
+    void pricingSchemeServiceIsCalledWhenTransactionCreatedOnly() {
         PricingSchemeServiceSpy pricingSchemeService = new PricingSchemeServiceSpy();
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
@@ -63,7 +63,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void scanItemReturnsTransactionSubtotal() throws ItemNotDefinedException, TransactionClosedException {
+    void scanItemReturnsTransactionSubtotal() {
         MockTransaction transaction = new MockTransaction();
         MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
@@ -75,7 +75,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void checkoutReturnsTransactionSubtotal() throws ItemNotDefinedException, TransactionClosedException {
+    void checkoutReturnsTransactionSubtotal() {
         MockTransaction transaction = new MockTransaction();
         MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
@@ -86,7 +86,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void whenPayThenTransactionIsClosed() throws ItemNotDefinedException, TransactionClosedException {
+    void whenPayThenTransactionIsClosed() {
         MockTransaction transaction = new MockTransaction();
         MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();

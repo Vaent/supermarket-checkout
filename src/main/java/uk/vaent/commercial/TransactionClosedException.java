@@ -1,3 +1,3 @@
 package uk.vaent.commercial;
 
-public class TransactionClosedException extends Exception {}
+public class TransactionClosedException extends RuntimeException {}

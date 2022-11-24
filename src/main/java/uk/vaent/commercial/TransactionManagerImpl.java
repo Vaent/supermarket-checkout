@@ -28,7 +28,7 @@ public class TransactionManagerImpl implements TransactionManager {
         return true;
     }
 
-    public int scan(char itemCode) throws ItemNotDefinedException, TransactionClosedException {
+    public int scan(char itemCode) {
         return getTransaction().add(itemCode);
     }
 
