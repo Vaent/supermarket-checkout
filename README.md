@@ -40,45 +40,45 @@ The CLI will be developed only after the API is completed.
 ### Messaging
 
 ```
-User ----> Controller.scan(item)
-  |                       |
-  |                   getTransaction()
-  |                       |
-  |                       +------> transaction.add(item)
-  |                       |                      |
-  |                       |<-- {running total} --+
-  |                       |
-  |<-- {running total} ---+
+User ----> transactionManager.scan(item)
+  |                            |
+  |                        getTransaction()
+  |                            |
+  |                            +------> transaction.add(item)
+  |                            |                      |
+  |                            |<-- {running total} --+
+  |                            |
+  |<----- {running total} -----+
 ```
 
 ```
-User ----> Controller.checkout()
-  |                       |
-  |                       +------> transaction.total()
-  |                       |                      |
-  |                       |<-- {running total} --+
-  |                       |
-  |<-- {running total} ---+
+User ----> transactionManager.checkout()
+  |                            |
+  |                            +------> transaction.total()
+  |                            |                      |
+  |                            |<-- {running total} --+
+  |                            |
+  |<----- {running total} -----+
 ```
 
 ```
-User ----> Controller.pay(paymentAmount)
-  |                       |
-  |                   closeTransaction() --> transaction.close()
-  |                       |
-  |<-- {confirm payment} -+
+User ----> transactionManager.pay()
+  |                            |
+  |                        closeTransaction() --> transaction.close()
+  |                            |
+  |<---- {confirm payment} ----+
 ```
 Note: no validation of payment is performed since the brief does not include any payment processing requirement. Similarly, no process is defined to cancel a transaction without payment. The payment step is stubbed here to allow closing the transaction in a controlled manner, with the expectation that it would be expanded later.
 
 ```
-Controller ----> PricingSchemeService.getCurrentScheme()
-  |                                     |
-  |<---- {default pricing scheme } -----+
+TransactionManager ----> PricingSchemeService.getCurrentScheme()
+  |                                              |
+  |<--------- {default pricing scheme } ---------+
 ```
 
-### Controller
+### TransactionManager interface / TransactionManagerImpl class
 
-Additional details to be considered alongside the messaging diagrams above.
+Additional implementation details to be considered alongside the messaging diagrams above.
 
 #### protected getTransaction() : Transaction
 
@@ -94,7 +94,7 @@ Additional details to be considered alongside the messaging diagrams above.
 - invoke close() on the current stored transaction
 - drop the reference to the transaction instance
 
-### PricingSchemeService
+### PricingSchemeService interface / PricingSchemeServiceImpl class 
 
 The stubbed service will always return the following data:
 
@@ -120,11 +120,11 @@ ItemMultiDeal is a record with the following fields:
 
 Note: record types are available in JDK 14 and higher versions.
 
-### Transaction
+### Transaction interface / TransactionImpl class
 
-Transaction class excludes the default no-args constructor since the pricing scheme must be loaded up front.
+TransactionImpl class excludes the default no-args constructor since the pricing scheme must be loaded up front.
 
-#### public Transaction(Set\<ItemPrice\> pricingScheme)
+#### public TransactionImpl(Set\<ItemPrice\> pricingScheme)
 
 - store pricingScheme
 - initialise and store an empty Map\<char, int\> which will record quantities of scanned items
