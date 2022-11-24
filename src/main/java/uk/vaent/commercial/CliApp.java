@@ -23,9 +23,13 @@ public class CliApp {
         }
     }
 
+    private String formatPriceAsPounds(int priceInPence) {
+        return String.format("£%.2f", (float)priceInPence/100);
+    }
+
     private void handleTransactionCommand(String input) {
         if (input.equalsIgnoreCase("checkout")) {
-            System.out.println("The current subtotal is " + transactionManager.checkout());
+            System.out.println("The current subtotal is " + formatPriceAsPounds(transactionManager.checkout()));
         } else if (input.equalsIgnoreCase("pay")) {
             if (transactionManager.pay()) {
                 System.out.println("The transaction has been paid");
@@ -34,7 +38,7 @@ public class CliApp {
             }
         } else if (input.matches(validItemsPattern)) {
             int subtotal = transactionManager.scan(input.charAt(0));
-            System.out.println("The current subtotal is " + subtotal);
+            System.out.println("The current subtotal is " + formatPriceAsPounds(subtotal));
         } else {
             System.out.println("Input not recognised.");
             if (input.matches(validItemsPattern.toLowerCase())) System.out.println("Make sure you type the exact character (upper/lower case).");
