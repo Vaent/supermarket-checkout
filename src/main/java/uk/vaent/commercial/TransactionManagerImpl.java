@@ -6,7 +6,7 @@ public class TransactionManagerImpl implements TransactionManager {
     TransactionFactory transactionFactory = new TransactionFactoryImpl();
 
     public int checkout() {
-        return 0;
+        return getTransaction().total();
     }
 
     protected Transaction getTransaction() {
@@ -20,9 +20,8 @@ public class TransactionManagerImpl implements TransactionManager {
         return true;
     }
 
-    public int scan(char itemCode) {
-        getTransaction();
-        return 0;
+    public int scan(char itemCode) throws ItemNotDefinedException, TransactionClosedException {
+        return getTransaction().add(itemCode);
     }
 
     public void setPricingSchemeService(PricingSchemeService pricingSchemeService) {

@@ -3,12 +3,11 @@ package uk.vaent.commercial;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import uk.vaent.commercial.mock.PricingSchemeServiceSpy;
-import uk.vaent.commercial.mock.TransactionFactorySpy;
+import uk.vaent.commercial.mock.*;
 
 class TransactionManagerImplTest {
     @Test
-    void scanFirstItemCreatesNewTransaction() {
+    void scanFirstItemCreatesNewTransaction() throws ItemNotDefinedException, TransactionClosedException {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -18,7 +17,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void scanSecondItemDoesNotCreateNewTransaction() {
+    void scanSecondItemDoesNotCreateNewTransaction() throws ItemNotDefinedException, TransactionClosedException {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -30,7 +29,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void whenScanItemAfterTransactionClosedThenNewTransactionCreated() {
+    void whenScanItemAfterTransactionClosedThenNewTransactionCreated() throws ItemNotDefinedException, TransactionClosedException {
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
         transactionManager.setTransactionFactory(transactionFactory);
@@ -45,7 +44,7 @@ class TransactionManagerImplTest {
     }
 
     @Test
-    void pricingSchemeServiceIsCalledWhenTransactionCreatedOnly() {
+    void pricingSchemeServiceIsCalledWhenTransactionCreatedOnly() throws ItemNotDefinedException, TransactionClosedException {
         PricingSchemeServiceSpy pricingSchemeService = new PricingSchemeServiceSpy();
         TransactionFactorySpy transactionFactory = new TransactionFactorySpy();
         TransactionManagerImpl transactionManager = new TransactionManagerImpl();
@@ -61,5 +60,28 @@ class TransactionManagerImplTest {
         //create second transaction
         transactionManager.scan('A');
         assertEquals(2, pricingSchemeService.getServiceCallsCount(), "First scan after closing should create new transaction");
+    }
+
+    @Test
+    void scanItemReturnsTransactionSubtotal() throws ItemNotDefinedException, TransactionClosedException {
+        MockTransaction transaction = new MockTransaction();
+        MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
+        TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        transactionManager.setTransactionFactory(transactionFactory);
+        transaction.setRunningTotal(42);
+        assertEquals(42, transactionManager.scan('A'));
+        transaction.setRunningTotal(420);
+        assertEquals(420, transactionManager.scan('A'));
+    }
+
+    @Test
+    void checkoutReturnsTransactionSubtotal() throws ItemNotDefinedException, TransactionClosedException {
+        MockTransaction transaction = new MockTransaction();
+        MockTransactionFactory transactionFactory = new MockTransactionFactory(transaction);
+        TransactionManagerImpl transactionManager = new TransactionManagerImpl();
+        transactionManager.setTransactionFactory(transactionFactory);
+        transaction.setRunningTotal(42);
+        transactionManager.scan('A');
+        assertEquals(42, transactionManager.checkout());
     }
 }

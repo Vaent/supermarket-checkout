@@ -4,8 +4,8 @@ import java.util.*;
 import uk.vaent.commercial.*;
 
 public class TransactionFactorySpy implements TransactionFactory {
-    private final List<Transaction> transactionsSupplied = new ArrayList<>();
-    private int transactionsSuppliedCount = 0;
+    protected final List<Transaction> transactionsSupplied = new ArrayList<>();
+    protected int transactionsSuppliedCount = 0;
 
     public Transaction getNew(Set<ItemPrice> pricingScheme) {
         TransactionImpl transaction = new TransactionImpl(pricingScheme);
