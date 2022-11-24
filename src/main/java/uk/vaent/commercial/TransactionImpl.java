@@ -1,8 +1,6 @@
 package uk.vaent.commercial;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TransactionImpl implements Transaction {
     private boolean isClosed = false;
@@ -15,10 +13,8 @@ public class TransactionImpl implements Transaction {
     }
 
     public int add(char scannedItem) throws ItemNotDefinedException {
-        runningTotal += pricingScheme.stream()
-            .filter(itemPrice -> itemPrice.item() == scannedItem)
-            .map(ItemPrice::unitPriceInPence)
-            .findAny().orElseThrow(ItemNotDefinedException::new);
+        itemQuantities.put(scannedItem, 1 + itemQuantities.getOrDefault(scannedItem, 0));
+        updateRunningTotal(scannedItem);
         return runningTotal;
     }
 
@@ -28,5 +24,18 @@ public class TransactionImpl implements Transaction {
 
     public int total() {
         return runningTotal;
+    }
+
+    public void updateRunningTotal(char scannedItem) throws ItemNotDefinedException {
+        ItemPrice scannedItemPrice = pricingScheme.stream()
+            .filter(itemPrice -> itemPrice.item() == scannedItem)
+            .findAny().orElseThrow(ItemNotDefinedException::new);
+        if (scannedItemPrice.multiDeal().isPresent()
+                && (itemQuantities.get(scannedItem) % scannedItemPrice.multiDeal().get().multiDealQuantity() == 0)) {
+            runningTotal += scannedItemPrice.multiDeal().get().multiDealPriceInPence()
+                - (scannedItemPrice.unitPriceInPence() * (scannedItemPrice.multiDeal().get().multiDealQuantity() - 1));
+        } else {
+            runningTotal += scannedItemPrice.unitPriceInPence();
+        }
     }
 }

@@ -26,4 +26,42 @@ class TransactionImplTest {
         Transaction transaction = new TransactionImpl(pricingSchema);
         assertThrows(ItemNotDefinedException.class, () -> transaction.add('X'));
     }
+
+    @Test
+    void addMultiDealItemRecognisesDealAtRelevantQuantity() throws ItemNotDefinedException {
+        Set<ItemPrice> pricingSchema = new HashSet<>();
+        pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
+        Transaction transaction = new TransactionImpl(pricingSchema);
+        assertEquals(10, transaction.add('A'));
+        assertEquals(20, transaction.add('A'));
+        assertEquals(25, transaction.add('A'), "Third item added should trigger multi-unit price");
+        assertEquals(35, transaction.add('A'));
+        assertEquals(45, transaction.add('A'));
+        assertEquals(50, transaction.add('A'), "Deal should be applied for every multiple of the multiDealQuantity");
+    }
+
+    @Test
+    void addMultiDealItemRecognisesDealWhenSequenceIsInterrupted() throws ItemNotDefinedException {
+        Set<ItemPrice> pricingSchema = new HashSet<>();
+        pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
+        pricingSchema.add(new ItemPrice('B', 100, Optional.empty()));
+        Transaction transaction = new TransactionImpl(pricingSchema);
+        transaction.add('A');
+        assertEquals(20, transaction.add('A'));
+        assertEquals(120, transaction.add('B'));
+        assertEquals(125, transaction.add('A'), "Third A should trigger multi-unit price");
+    }
+
+    @Test
+    void addMultiDealItemHandlesDifferentDeals() throws ItemNotDefinedException {
+        Set<ItemPrice> pricingSchema = new HashSet<>();
+        pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
+        pricingSchema.add(new ItemPrice('B', 100, Optional.of(new ItemMultiDeal(2, 125))));
+        Transaction transaction = new TransactionImpl(pricingSchema);
+        assertEquals(100, transaction.add('B'));
+        assertEquals(110, transaction.add('A'));
+        assertEquals(135, transaction.add('B'), "Second B should trigger multi-unit price");
+        assertEquals(145, transaction.add('A'));
+        assertEquals(150, transaction.add('A'), "Third A should trigger multi-unit price");
+    }
 }
