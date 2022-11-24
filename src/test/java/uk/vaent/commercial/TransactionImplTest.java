@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class TransactionImplTest {
     @Test
-    void addItemReturnsUpdatedTotalCost() throws ItemNotDefinedException {
+    void addItemReturnsUpdatedTotalCost() throws ItemNotDefinedException, TransactionClosedException {
         Set<ItemPrice> pricingSchema = new HashSet<>();
         pricingSchema.add(new ItemPrice('A', 10, Optional.empty()));
         pricingSchema.add(new ItemPrice('B', 25, Optional.empty()));
@@ -28,7 +28,16 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemRecognisesDealAtRelevantQuantity() throws ItemNotDefinedException {
+    void addItemThrowsExceptionIfTransactionIsClosed() {
+        Set<ItemPrice> pricingSchema = new HashSet<>();
+        pricingSchema.add(new ItemPrice('A', 10, Optional.empty()));
+        Transaction transaction = new TransactionImpl(pricingSchema);
+        transaction.close();
+        assertThrows(TransactionClosedException.class, () -> transaction.add('A'));
+    }
+
+    @Test
+    void addMultiDealItemRecognisesDealAtRelevantQuantity() throws ItemNotDefinedException, TransactionClosedException {
         Set<ItemPrice> pricingSchema = new HashSet<>();
         pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         Transaction transaction = new TransactionImpl(pricingSchema);
@@ -41,7 +50,7 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemRecognisesDealWhenSequenceIsInterrupted() throws ItemNotDefinedException {
+    void addMultiDealItemRecognisesDealWhenSequenceIsInterrupted() throws ItemNotDefinedException, TransactionClosedException {
         Set<ItemPrice> pricingSchema = new HashSet<>();
         pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         pricingSchema.add(new ItemPrice('B', 100, Optional.empty()));
@@ -53,7 +62,7 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemHandlesDifferentDeals() throws ItemNotDefinedException {
+    void addMultiDealItemHandlesDifferentDeals() throws ItemNotDefinedException, TransactionClosedException {
         Set<ItemPrice> pricingSchema = new HashSet<>();
         pricingSchema.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         pricingSchema.add(new ItemPrice('B', 100, Optional.of(new ItemMultiDeal(2, 125))));
