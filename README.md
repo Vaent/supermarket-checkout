@@ -133,8 +133,8 @@ TransactionImpl class excludes the default no-args constructor since the pricing
 
 #### public add(char scannedItem) : int
 
-- if this transaction is closed, throw a checked exception
-- if the stored pricingScheme does not contain a definition for scannedItem, throw a checked exception
+- if this transaction is closed, throw a runtime exception
+- if the stored pricingScheme does not contain a definition for scannedItem, throw a runtime exception
 - get current quantity (if any) of scannedItem from stored TransactionStatus
 - increment quantity
 - put new quantity of scannedItem in stored Map

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class TransactionImplTest {
     @Test
-    void addItemReturnsUpdatedTotalCost() throws ItemNotDefinedException, TransactionClosedException {
+    void addItemReturnsUpdatedTotalCost() {
         Set<ItemPrice> pricingScheme = new HashSet<>();
         pricingScheme.add(new ItemPrice('A', 10, Optional.empty()));
         pricingScheme.add(new ItemPrice('B', 25, Optional.empty()));
@@ -37,7 +37,7 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemRecognisesDealAtRelevantQuantity() throws ItemNotDefinedException, TransactionClosedException {
+    void addMultiDealItemRecognisesDealAtRelevantQuantity() {
         Set<ItemPrice> pricingScheme = new HashSet<>();
         pricingScheme.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         Transaction transaction = new TransactionImpl(pricingScheme);
@@ -50,7 +50,7 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemRecognisesDealWhenSequenceIsInterrupted() throws ItemNotDefinedException, TransactionClosedException {
+    void addMultiDealItemRecognisesDealWhenSequenceIsInterrupted() {
         Set<ItemPrice> pricingScheme = new HashSet<>();
         pricingScheme.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         pricingScheme.add(new ItemPrice('B', 100, Optional.empty()));
@@ -62,7 +62,7 @@ class TransactionImplTest {
     }
 
     @Test
-    void addMultiDealItemHandlesDifferentDeals() throws ItemNotDefinedException, TransactionClosedException {
+    void addMultiDealItemHandlesDifferentDeals() {
         Set<ItemPrice> pricingScheme = new HashSet<>();
         pricingScheme.add(new ItemPrice('A', 10, Optional.of(new ItemMultiDeal(3, 25))));
         pricingScheme.add(new ItemPrice('B', 100, Optional.of(new ItemMultiDeal(2, 125))));

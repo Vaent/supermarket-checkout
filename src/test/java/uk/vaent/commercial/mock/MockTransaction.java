@@ -6,7 +6,7 @@ public class MockTransaction implements Transaction {
     protected int closeInvocationCount = 0;
     protected int runningTotal = 0;
 
-    public int add(char scannedItem) throws ItemNotDefinedException, TransactionClosedException {
+    public int add(char scannedItem) {
         return runningTotal;
     }
 

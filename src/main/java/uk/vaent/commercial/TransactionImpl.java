@@ -12,7 +12,7 @@ public class TransactionImpl implements Transaction {
         this.pricingScheme = pricingScheme;
     }
 
-    public int add(char scannedItem) throws ItemNotDefinedException, TransactionClosedException {
+    public int add(char scannedItem) {
         if (isClosed) throw new TransactionClosedException();
         itemQuantities.put(scannedItem, 1 + itemQuantities.getOrDefault(scannedItem, 0));
         updateRunningTotal(scannedItem);
